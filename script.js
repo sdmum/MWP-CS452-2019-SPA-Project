@@ -16,50 +16,135 @@ window.onload = () => {
         Password: <input type="text" value="123"></input> <br>
         <button type="button" id="loginBtn"> Login </button>`
 
-    let animationPagehtml =
-        `<h2> Welcome all from <br>
-        <textarea rows="40" cols="100" id="animationTextArea"></textarea><br>
-
-        <button type="button" id="refreshBtn"> Refresh Animation </button> 
-        <button type="button" id="logoutBtn"> Logout </button> 
-
-        `
+    // let animationPagehtml =
+    //     `<h2 id=welcomeId> Welcome<h2><br>
+    //     <textarea rows="40" cols="100" id="animationTextArea"></textarea><br>
+    //     <button type="button" id="refreshBtn"> Refresh Animation </button> 
+    //     <button type="button" id="logoutBtn"> Logout </button> 
+    //     `
 
     document.querySelector("#outlet").innerHTML = firstPagehtml
 
-    function animationPage() {
-        document.querySelector("#outlet").innerHTML = animationPagehtml
+    document.getElementById("loginBtn").addEventListener("click", login)
+
+
+    let isLogin;
+    let myObj;
+
+    function login() {
+
+        const inputs = document.querySelectorAll('input') // [input, input]
+
+        fetch('http://mumstudents.org/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ "username": inputs[0].value, "password": inputs[1].value })
+        })
+            .then(response => response.json())
+            .then(data => {
+                myObj = data;
+
+
+                if (myObj.status) {
+                    document.querySelector("#outlet").innerHTML = `<h2 id=welcomeId> Welcome ${city} ${state} ${country} <h2><br>
+                    <textarea rows="40" cols="100" id="animationTextArea"></textarea><br>
+                    <button type="button" id="refreshBtn"> Refresh Animation </button> 
+                    <button type="button" id="logoutBtn"> Logout </button> 
+                    `;
+                    isLogin = true;
+
+                } else {
+                    alert("Incorrect login credentials")
+                }
+            })
     }
 
+    function logOut() {
+        if (isLogin) {
+            document.querySelector("#outlet").innerHTML = firstPagehtml
+        }
+        isLogin = false
+    }
+
+
+    // document.getElementById("logoutBtn").addEventListener("click", logOut)
+
+    let longitude;
+    let latitude;
+    let locationObj;
+    let navigatorKey = "ReZTsHlODWnYHr2pVQjftQiOcMKwSZWb"
+    let city;
+    let state;
+    let country;
 
     navigator.geolocation.getCurrentPosition(success, fail);
 
     function success(position) {
-        console.log('Longitude:' + position.coords.longitude);
-        console.log('Latitude:' + position.coords.latitude);
-    }
-
-    function fail(msg) {
-        console.log(msg.code + msg.message); // Log the error
-    }
+        latitude = position.coords.latitude //latitude 41.0127308
+        longitude = position.coords.longitude  //longitude -91.959689
 
 
-    document.getElementById("loginBtn").addEventListener("click", animationPage)
-
-    fetch("http://open.mapquestapi.com/geocoding/v1/reverse")
-        .then(response => response.json())
-        .then(myJson => console.log(myJson));
-
-    fetch('http://mumstudents.org/api/login', {
-            method: 'POST', // GET, POST, PUT, DELETE, etc.
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({"username": "mwp", "password": 123})
+        fetch(`http://open.mapquestapi.com/geocoding/v1/reverse?key=${navigatorKey}&location=${latitude},${longitude}`, {
+            header: { 'Content-Type': 'application/json' }
         })
-            
-        
-         .then(response => response.json());
-    //     .catch (error => console.error(error));
+            .then(response => response.json())
+            .then(data => {
 
-    
+                locationObj = data;
+
+                console.log(longitude)
+                console.log(latitude)
+                console.log(locationObj)
+
+                console.log(locationObj.results[0].locations[0].adminArea1)
+                city = locationObj.results[0].locations[0].adminArea5
+                state = locationObj.results[0].locations[0].adminArea3
+                country = locationObj.results[0].locations[0].adminArea1
+
+                console.log(city)
+                console.log(state)
+                console.log(country)
+
+            })
+    }
 
 }
+
+
+//latitude 41.0127308
+//longitude -91.959689
+
+function fail(msg) {
+    console.log(msg.code + msg.message); // Log the error
+}
+
+
+    // fetch("http://open.mapquestapi.com/geocoding/v1/reverse?")
+    //     .then(response => response.json())
+    //     .then(myJson => console.log(myJson));
+
+
+
+    // fetch('http://mumstudents.org/api/login', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({ "username": "mwp", "password": 123 })
+    // }).then(response => response.json())
+    //     .then(data => {
+    //         myObj = data
+    //     })
+
+
+
+    // fetch('http://mumstudents.org/api/login')
+    //         .then(response => response.json())
+    //         .then(myJson = console.log(myJson));
+    //         let tokenObj = response.json();
+
+    //         console.log(tokenObj.token)
+
+    //     .then(response => response.json());
+    //     .catch (error => console.error(error));
+
+
+
