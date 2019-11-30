@@ -1,13 +1,3 @@
-// your code here
-
-/*URL: http://mumstudents.org/api/login
-HTTP verb: POST
-Request body: JSON format
-{“username”: “mwp”, “password”: “123”
-The server will send a JSON response with the following format:
-{token: string, status: true}
-*/
-
 window.onload = () => {
 
     let firstPagehtml =
@@ -16,24 +6,19 @@ window.onload = () => {
         Password: <input type="text" value="123"></input> <br>
         <button type="button" id="loginBtn"> Login </button>`
 
-    // let animationPagehtml =
-    //     `<h2 id=welcomeId> Welcome<h2><br>
-    //     <textarea rows="40" cols="100" id="animationTextArea"></textarea><br>
-    //     <button type="button" id="refreshBtn"> Refresh Animation </button> 
-    //     <button type="button" id="logoutBtn"> Logout </button> 
-    //     `
-
-    document.querySelector("#outlet").innerHTML = firstPagehtml
-
-    document.getElementById("loginBtn").addEventListener("click", login)
-
-
     let isLogin;
     let myObj;
+    let animString;
+    // let myToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtd2EiLCJpc3N1ZWRBdCI6IjIwMTktMTEtMjciLCJ1c2VybmFtZSI6Im13cCJ9.U9ciwh5lcPwFlJdxhNQkeiMc7AMYAnawfKNidw8CNDpTIUjNBL_EtDqkXG4qGOF8H_Ve1S2Gg2PwmCYOkfgmWA"
+
+    document.querySelector("#outlet").innerHTML = firstPagehtml
+    document.getElementById("loginBtn").addEventListener("click", login)
+    document.getElementById("loginBtn").addEventListener("click", animationFunc)
+
 
     function login() {
-
         const inputs = document.querySelectorAll('input') // [input, input]
+
 
         fetch('http://mumstudents.org/api/login', {
             method: 'POST',
@@ -43,7 +28,7 @@ window.onload = () => {
             .then(response => response.json())
             .then(data => {
                 myObj = data;
-
+                console.log(myObj.token)
 
                 if (myObj.status) {
                     document.querySelector("#outlet").innerHTML = `<h2 id=welcomeId> Welcome ${city} ${state} ${country} <h2><br>
@@ -65,8 +50,6 @@ window.onload = () => {
         }
         isLogin = false
     }
-
-
     // document.getElementById("logoutBtn").addEventListener("click", logOut)
 
     let longitude;
@@ -83,68 +66,49 @@ window.onload = () => {
         latitude = position.coords.latitude //latitude 41.0127308
         longitude = position.coords.longitude  //longitude -91.959689
 
-
         fetch(`http://open.mapquestapi.com/geocoding/v1/reverse?key=${navigatorKey}&location=${latitude},${longitude}`, {
             header: { 'Content-Type': 'application/json' }
         })
             .then(response => response.json())
             .then(data => {
-
                 locationObj = data;
-
-                console.log(longitude)
-                console.log(latitude)
-                console.log(locationObj)
-
-                console.log(locationObj.results[0].locations[0].adminArea1)
                 city = locationObj.results[0].locations[0].adminArea5
                 state = locationObj.results[0].locations[0].adminArea3
                 country = locationObj.results[0].locations[0].adminArea1
-
-                console.log(city)
-                console.log(state)
-                console.log(country)
-
             })
     }
-
 }
 
-
-//latitude 41.0127308
-//longitude -91.959689
 
 function fail(msg) {
     console.log(msg.code + msg.message); // Log the error
 }
 
 
-    // fetch("http://open.mapquestapi.com/geocoding/v1/reverse?")
-    //     .then(response => response.json())
-    //     .then(myJson => console.log(myJson));
+function animationFunc() {
 
+    let myToken = `eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtd2EiLCJpc3N1ZWRBdCI6IjIwMTktMTEtMjciLCJ1c2VybmFtZSI6Im13cCJ9.U9ciwh5lcPwFlJdxhNQkeiMc7AMYAnawfKNidw8CNDpTIUjNBL_EtDqkXG4qGOF8H_Ve1S2Gg2PwmCYOkfgmWA`
 
+    // URL: http://mumstudents.org/api/animation
+    // HTTP verb: GET
+    // Request header must include the following:
+    // Authorization: Bearer token
+    // Replace the token from the response received after you log in.
+    // The server will send back a string response contains the full ASCII animation frames
+    fetch("http://mumstudents.org/api/animation", {
+        header: {
+            'Content-Type': 'application/text',
+            // Authorization: `Bearer ${myToken}`
+            Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtd2EiLCJpc3N1ZWRBdCI6IjIwMTktMTEtMjciLCJ1c2VybmFtZSI6Im13cCJ9.U9ciwh5lcPwFlJdxhNQkeiMc7AMYAnawfKNidw8CNDpTIUjNBL_EtDqkXG4qGOF8H_Ve1S2Gg2PwmCYOkfgmWA`
+        }
 
-    // fetch('http://mumstudents.org/api/login', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({ "username": "mwp", "password": 123 })
-    // }).then(response => response.json())
-    //     .then(data => {
-    //         myObj = data
-    //     })
-
-
-
-    // fetch('http://mumstudents.org/api/login')
-    //         .then(response => response.json())
-    //         .then(myJson = console.log(myJson));
-    //         let tokenObj = response.json();
-
-    //         console.log(tokenObj.token)
-
-    //     .then(response => response.json());
-    //     .catch (error => console.error(error));
+    })
+        .then(response => response.text())
+        .then(data => {
+            animString = data;
+            console.log(animString);
+        })
+}
 
 
 

@@ -1,0 +1,6 @@
+Wednesday: Continued working on the project, specifically with fetching the Animation API. I hit a road block as I was unable to get the token to be fetched by the API correctly.
+
+Thursday: I had dinner with my friends/family for Thanksgiving.
+
+Friday: Researched fetch API to solidify my understanding of it. I thought that maybe if I had a clearer understanding of it, I could finally debug the token problem.
+However, many resources on the internet have examples of different instances of fetch, that weren't as helpful as I would have liked.
