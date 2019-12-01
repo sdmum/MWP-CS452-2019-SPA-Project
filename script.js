@@ -6,6 +6,8 @@ window.onload = () => {
         Password: <input type="text" value="123"></input> <br>
         <button type="button" id="loginBtn"> Login </button>`
 
+    let animationPagehtml;
+
     let isLogin;
     let myObj;
     let animString;
@@ -13,7 +15,7 @@ window.onload = () => {
 
     document.querySelector("#outlet").innerHTML = firstPagehtml
     document.getElementById("loginBtn").addEventListener("click", login)
-    document.getElementById("loginBtn").addEventListener("click", animationFunc)
+
 
 
     function login() {
@@ -31,11 +33,7 @@ window.onload = () => {
                 console.log(myObj.token)
 
                 if (myObj.status) {
-                    document.querySelector("#outlet").innerHTML = `<h2 id=welcomeId> Welcome ${city} ${state} ${country} <h2><br>
-                    <textarea rows="40" cols="100" id="animationTextArea"></textarea><br>
-                    <button type="button" id="refreshBtn"> Refresh Animation </button> 
-                    <button type="button" id="logoutBtn"> Logout </button> 
-                    `;
+                    animationFunc();
                     isLogin = true;
 
                 } else {
@@ -77,38 +75,73 @@ window.onload = () => {
                 country = locationObj.results[0].locations[0].adminArea1
             })
     }
-}
 
 
-function fail(msg) {
-    console.log(msg.code + msg.message); // Log the error
-}
+
+    function fail(msg) {
+        console.log(msg.code + msg.message); // Log the error
+    }
 
 
-function animationFunc() {
+    function animationFunc() {
 
-    let myToken = `eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtd2EiLCJpc3N1ZWRBdCI6IjIwMTktMTEtMjciLCJ1c2VybmFtZSI6Im13cCJ9.U9ciwh5lcPwFlJdxhNQkeiMc7AMYAnawfKNidw8CNDpTIUjNBL_EtDqkXG4qGOF8H_Ve1S2Gg2PwmCYOkfgmWA`
+        console.log(myObj.token + "");
+        let myToken = `eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtd2EiLCJpc3N1ZWRBdCI6IjIwMTktMTEtMjciLCJ1c2VybmFtZSI6Im13cCJ9.U9ciwh5lcPwFlJdxhNQkeiMc7AMYAnawfKNidw8CNDpTIUjNBL_EtDqkXG4qGOF8H_Ve1S2Gg2PwmCYOkfgmWA`
 
-    // URL: http://mumstudents.org/api/animation
-    // HTTP verb: GET
-    // Request header must include the following:
-    // Authorization: Bearer token
-    // Replace the token from the response received after you log in.
-    // The server will send back a string response contains the full ASCII animation frames
-    fetch("http://mumstudents.org/api/animation", {
-        header: {
-            'Content-Type': 'application/text',
-            // Authorization: `Bearer ${myToken}`
-            Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtd2EiLCJpc3N1ZWRBdCI6IjIwMTktMTEtMjciLCJ1c2VybmFtZSI6Im13cCJ9.U9ciwh5lcPwFlJdxhNQkeiMc7AMYAnawfKNidw8CNDpTIUjNBL_EtDqkXG4qGOF8H_Ve1S2Gg2PwmCYOkfgmWA`
-        }
+        // URL: http://mumstudents.org/api/animation
+        // HTTP verb: GET
+        // Request header must include the following:
+        // Authorization: Bearer token
+        // Replace the token from the response received after you log in.
+        // The server will send back a string response contains the full ASCII animation frames
+        fetch("http://mumstudents.org/api/animation", {
+            headers: {
 
-    })
-        .then(response => response.text())
-        .then(data => {
-            animString = data;
-            console.log(animString);
+                // Authorization: `Bearer ${myToken}`
+                'Authorization': `Bearer ${myObj.token}`
+
+            }
         })
+            .then(response => response.text())
+            .then(data => {
+                animString = data;
+                animString = animString.split("=====");
+                console.log(animString);
+
+                animationPagehtml = `<h2 id=welcomeId> Welcome ${city} ${state} ${country} <h2><br>
+                <textarea rows="40" cols="100" id="animationTextArea"></textarea><br>
+                <button type="button" id="refreshBtn"> Refresh Animation </button> 
+                <button type="button" id="logoutBtn"> Logout </button> `
+
+                document.querySelector("#outlet").innerHTML = animationPagehtml;
+
+                // document.getElementById("animationTextArea").innerHTML = animString
+
+
+                // let i = 0;
+                // setInterval((animString) => {
+                //     console.log(animString[i])
+                //     i++
+                //     if (i === animString.length - 1) {
+                //         i = 0
+                //     }
+                // }, 200);
+
+
+
+
+                let i = 0
+                setInterval(playAnim, 200);
+
+                function playAnim() {
+                    //console.log(animString[i])
+                    document.getElementById("animationTextArea").innerHTML = animString[i];
+                    ++i
+                    if (i === animString.length - 1) {
+                        i = 0;
+                    }
+                }
+            })
+    }
 }
-
-
 

@@ -1,0 +1,12 @@
+Sunday,
+
+It seems like a tremendous amount of time must go into figuring out small issues that arise. Progress seems slow, but it feels good to finally get something to work.
+I was finally able to get the animation to play on the text area. So far it looks like things are running cleanly, and I am satisfied with my progress. I hope that the next portions 
+of the project go smoothly. I can't believe how much I've learned so far. I am finally able to have conversations with my programming buddies now that we're applying real life concepts
+in the industry. As difficult as fetch is to understand, it's amazing to see that this is one of the ways the internet shares data. 
+
+My next goal from here is to get the 'Refresh Animation' button to work. 
+
+From there, I will complete the logout button/ logout function.
+
+After that I will complete the History API. 
