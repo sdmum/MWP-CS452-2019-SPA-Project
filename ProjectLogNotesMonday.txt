@@ -1,0 +1,4 @@
+I continued to study the history API. I'm not quite understanding the nature of utilizing it within the functions. It's tricky to find the placement for it, all the while 
+understanding the different components of its syntax. 
+
+I've focused on today's lesson more than anything, as it is an entirely new concept and felt like it is more important to commit this to memory as quickly as possible. 
