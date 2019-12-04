@@ -1,34 +1,38 @@
 window.onload = () => {
 
-    let loginTemplate =
-        `<h1> Please Login </h1><br>
+    function firstPageFunc() {
+
+        let loginTemplate =
+            `<h1> Please Login </h1><br>
         Username: <input type="text" value="mwp"></input> <br> 
         Password: <input type="text" value="123"></input> <br>
         <button type="button" id="loginBtn"> Login </button>`
 
-    let animationTemplate =
-        `<br>
+        let animationTemplate =
+            `<br>
         <textarea rows="40" cols="100" id="animationTextArea"></textarea><br>
         <button type="button" id="refreshBtn"> Refresh Animation </button> 
         <button type="button" id="logoutBtn"> Logout </button> `
 
-    let isLogin;
-    let myObj;
-    let animString;
+        let isLogin;
+        let myObj;
+        let animString;
 
-    // let loginBtn = document.getElementById("loginBtn")
+        let loginBtn = document.getElementById("loginBtn")
 
-    let refresh;
+        let refresh;
 
-    document.querySelector("#outlet").innerHTML = loginTemplate
-    document.getElementById("loginBtn").addEventListener("click", login)
+        document.querySelector("#outlet").innerHTML = loginTemplate
+        document.getElementById("loginBtn").addEventListener("click", login)
 
+        history.pushState({ template: loginTemplate }, null, '?name=loginpage')
+        window.addEventListener('popstate', (event) => console.log(event.state.template))
 
+    }
+
+    firstPageFunc();
 
     function login() {
-
-        loginBtn.addEventListener("click", _ => window.history.pushState({ page: 1 }, "title 1", "?page=1"))
-
         const inputs = document.querySelectorAll('input') // [input, input]
 
         fetch('http://mumstudents.org/api/login', {
@@ -53,11 +57,11 @@ window.onload = () => {
 
     function logOut() {
         if (isLogin) {
-            document.querySelector("#outlet").innerHTML = loginTemplate
+            firstPageFunc()
         }
         isLogin = false
     }
-    // document.getElementById("logoutBtn").addEventListener("click", logOut)
+
 
     let longitude;
     let latitude;
@@ -94,14 +98,9 @@ window.onload = () => {
         console.log(msg.code + msg.message); // Log the error
     }
 
-
-
-
     function animationFunc() {
-
-
         document.querySelector("#outlet").innerHTML = animationTemplate;
-
+        document.getElementById("logoutBtn").addEventListener("click", logOut)
         // refresh = document.getElementById("refreshBtn").addEventListener("click", animationFetch)
 
         animationFetch();
@@ -137,8 +136,7 @@ window.onload = () => {
                 setInterval(playAnim, 200);
             })
     }
-
-
 }
 
 //document.getElementById("refreshBtn").addEventListener("click", animationFetch)
+
