@@ -20,7 +20,7 @@ window.onload = () => {
 
         let loginBtn = document.getElementById("loginBtn")
 
-        let refresh;
+        // let refreshBtn = document.getElementById("refreshBtn");
 
         document.querySelector("#outlet").innerHTML = loginTemplate
         document.getElementById("loginBtn").addEventListener("click", login)
@@ -56,11 +56,15 @@ window.onload = () => {
     }
 
     function logOut() {
+        history.pushState({ template: animationTemplate }, null, '?name=animationpage')
+        window.addEventListener('popstate', (event) => console.log(event.state.template))
+
         if (isLogin) {
             firstPageFunc()
         }
         isLogin = false
     }
+
 
 
     let longitude;
@@ -101,7 +105,7 @@ window.onload = () => {
     function animationFunc() {
         document.querySelector("#outlet").innerHTML = animationTemplate;
         document.getElementById("logoutBtn").addEventListener("click", logOut)
-        // refresh = document.getElementById("refreshBtn").addEventListener("click", animationFetch)
+        document.getElementById("refreshBtn").addEventListener("click", animationFetch)
 
         animationFetch();
 
